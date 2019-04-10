@@ -11,7 +11,7 @@
     <h1 class="mb-5">Tags:
       {% for tag in tags %}
 
-        <h3> {{ tag.title }}</h3>
+        <h3> <a href="{{ tag.get_absolute_url }}">{{ tag.title }}</a></h3>
 
       {% endfor %}
     </h1>
