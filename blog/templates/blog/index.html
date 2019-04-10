@@ -15,7 +15,7 @@ Posts list
   <div class="card-body">
     <h5 class="card-title">{{ post.title }}</h5>
     <p class="card-text">{{ post.body|truncatewords:15}}</p>
-    <a href="#" class="btn btn-light">Read</a>
+    <a href="{% url 'post_detail_url' slug=post.slug %}" class="btn btn-light">Read</a>
   </div>
 </div>
 
