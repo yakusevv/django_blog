@@ -1,7 +1,9 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 
+from .models import Post
+
 
 def posts_list(request):
-    n = ['User1', 'User2']
-    return render(request, 'blog/index.html', context={'names': n})
+    posts = Post.objects.all()
+    return render(request, 'blog/index.html', context={'posts': posts})
