@@ -7,7 +7,7 @@
 
 
 {% block content %}
-  <form class="" action="{% url 'post_create_url' %}" method="post">
+  <form action="{% url 'post_create_url' %}" method="post">
     {% csrf_token %}
 
     {% for field in form %}
