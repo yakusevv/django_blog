@@ -33,10 +33,15 @@ class Post(models.Model):
 
 class Tag(models.Model):
     title = models.CharField(max_length=50, unique=True)
-    slug = models.SlugField(max_length=50, unique=True)
+    slug = models.SlugField(max_length=50, blank=True, unique=True)
 
     def __str__(self):
         return self.title
 
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.slug = gen_slug(self.title)
+        super().save(*args, **kwargs)
+    
     def get_absolute_url(self):
         return reverse('tag_detail_url', kwargs={'slug': self.slug})
