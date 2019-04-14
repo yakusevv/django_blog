@@ -5,11 +5,9 @@ from django.utils.text import slugify
 from time import time
 
 
-
 def gen_slug(s):
     new_slug = slugify(s, allow_unicode=True)
     return new_slug + '-' + str(int(time()))
-
 
 
 class Post(models.Model):
@@ -30,6 +28,8 @@ class Post(models.Model):
     def get_absolute_url(self):
         return reverse('post_detail_url', kwargs={'slug': self.slug})
 
+    def get_update_url(self):
+        return reverse('tag_update_url', kwargs={'slug': self.slug})
 
 class Tag(models.Model):
     title = models.CharField(max_length=50, unique=True)
@@ -42,6 +42,9 @@ class Tag(models.Model):
         if not self.id:
             self.slug = gen_slug(self.title)
         super().save(*args, **kwargs)
-    
+
     def get_absolute_url(self):
         return reverse('tag_detail_url', kwargs={'slug': self.slug})
+
+    def get_update_url(self):
+        return reverse('tag_update_url', kwargs={'slug': self.slug})
