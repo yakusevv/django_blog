@@ -11,11 +11,23 @@ from .models import Post, Tag
 from .utils import *
 from .forms import TagForm, PostForm
 
+
 def posts_list(request):
     search_query = request.GET.get('search', '')
 
     if search_query:
-        posts = Post.objects.filter(Q(title__icontains=search_query)|Q(body__icontains=search_query))
+        posts = Post.objects.filter(
+        Q(title__icontains=search_query)|
+        Q(body__icontains=search_query)
+        )
+        if not posts.count():
+            no_results = True
+            return render(request, 'blog/index.html', context={
+                                                        'no_results': no_results,
+                                                        'search_query': search_query
+                                                        })
+        else:
+            no_results = False
     else:
         posts = Post.objects.all()
 
@@ -23,7 +35,6 @@ def posts_list(request):
     page_number = request.GET.get('page', 1)
     page = paginator.get_page(page_number)
     is_paginated = page.has_other_pages()
-
 
     if page.has_previous():
         prev_url = '?page={}'.format(page.previous_page_number())
@@ -35,9 +46,8 @@ def posts_list(request):
     else:
         next_url = ''
 
-
-
     context = {
+        'search_query': search_query,
         'page_object': page,
         'is_paginated': is_paginated,
         'prev_url': prev_url,

@@ -5,10 +5,17 @@ Posts list
 {% endblock %}
 
 {% block content %}
+  {% if no_results %}
+    <h3>There are no search results for "{{ search_query }}"</h3>
+  {% else %}
     <h1 class="mb-5">Posts:</h1>
+  {% if search_query %}
+    <h3 class="mb-4">Search results for "{{ search_query }}"</h3>
+  {% endif %}
   {% for post in page_object.object_list %}
 
   {% include 'blog/includes/post_card_template.html' %}
 
   {% endfor %}
+  {% endif %}
 {% endblock %}
