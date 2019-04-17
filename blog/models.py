@@ -17,6 +17,11 @@ class Post(models.Model):
     date_pub = models.DateTimeField(auto_now_add=True)
     tags = models.ManyToManyField('Tag', blank=True, related_name='posts')
 
+
+    class Meta:
+        ordering = ['-date_pub']
+
+
     def __str__(self):
         return self.title
 
@@ -37,6 +42,10 @@ class Post(models.Model):
 class Tag(models.Model):
     title = models.CharField(max_length=50, unique=True)
     slug = models.SlugField(max_length=50, blank=True, unique=True)
+
+
+    class Meta:
+        ordering = ['title']
 
     def __str__(self):
         return self.title
