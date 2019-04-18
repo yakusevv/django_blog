@@ -21,7 +21,6 @@ class Post(models.Model):
     class Meta:
         ordering = ['-date_pub']
 
-
     def __str__(self):
         return self.title
 
@@ -38,6 +37,21 @@ class Post(models.Model):
 
     def get_delete_url(self):
         return reverse('post_delete_url', kwargs={'slug': self.slug})
+
+    def shorted_body(self):
+        if len(self.body.split(' '))>5:
+            shorted = ''.join(word + ' ' for word in self.body.split(' ')[:5])
+            return shorted + '...'
+        else:
+            return self.body
+
+    shorted_body.short_description = 'Body'
+
+    def display_tags(self):
+        return ', '.join(tag.title for tag in self.tags.all())
+
+    display_tags.short_description = 'Tags'
+
 
 class Tag(models.Model):
     title = models.CharField(max_length=50, unique=True)
