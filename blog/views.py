@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from django.views.generic import View
 from django.urls import reverse
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.core.paginator import Paginator
 from django.db.models import Q
 
@@ -62,23 +62,26 @@ class PostDetail(ObjectDetailMixin, View):
     template = 'blog/post_detail.html'
 
 
-class PostCreate(LoginRequiredMixin, ObjectCreateMixin, View):
+class PostCreate(PermissionRequiredMixin, ObjectCreateMixin, View):
     model_form = PostForm
     template = 'blog/post_create_form.html'
+    permission_required = 'blog.can_create'
     raise_exception = True
 
 
-class PostUpdate(LoginRequiredMixin, ObjectUpdateMixin, View):
+class PostUpdate(PermissionRequiredMixin, ObjectUpdateMixin, View):
     model = Post
     model_form = PostForm
     template = 'blog/post_update_form.html'
+    permission_required = 'blog.can_update'
     raise_exception = True
 
 
-class PostDelete(LoginRequiredMixin, ObjectDeleteMixin, View):
+class PostDelete(PermissionRequiredMixin, ObjectDeleteMixin, View):
     model = Post
     template = 'blog/post_delete_form.html'
     redirect_url = 'posts_list_url'
+    permission_required = 'blog.can_delete'
     raise_exception = True
 
 
@@ -92,21 +95,24 @@ class TagDetail(ObjectDetailMixin, View):
     template = 'blog/tag_detail.html'
 
 
-class TagCreate(LoginRequiredMixin, ObjectCreateMixin, View):
+class TagCreate(PermissionRequiredMixin, ObjectCreateMixin, View):
     model_form = TagForm
     template = 'blog/tag_create.html'
+    permission_required = 'blog.can_create'
     raise_exception = True
 
 
-class TagUpdate(LoginRequiredMixin, ObjectUpdateMixin, View):
+class TagUpdate(PermissionRequiredMixin, ObjectUpdateMixin, View):
     model = Tag
     model_form = TagForm
     template = 'blog/tag_update_form.html'
+    permission_required = 'blog.can_update'
     raise_exception = True
 
 
-class TagDelete(LoginRequiredMixin, ObjectDeleteMixin, View):
+class TagDelete(PermissionRequiredMixin, ObjectDeleteMixin, View):
     model = Tag
     template = 'blog/tag_delete_form.html'
     redirect_url = 'tags_list_url'
+    permission_required = 'blog.can_delete'
     raise_exception = True
