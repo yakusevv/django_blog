@@ -1,13 +1,15 @@
 from django.contrib import admin
 from django.db.models import Count
 
-from .models import Post, Tag
+from .models import Post, Tag, Profile
 # Register your models here.
+
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
     list_display = ('title', 'shorted_body', 'display_tags', 'date_pub')
     list_filter = ('date_pub', 'tags')
+
 
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
@@ -24,3 +26,8 @@ class TagAdmin(admin.ModelAdmin):
         return obj._number_of_posts
 
     number_of_posts.admin_order_field = '_number_of_posts'
+
+
+@admin.register(Profile)
+class ProfileAdmin(admin.ModelAdmin):
+     pass
