@@ -85,6 +85,9 @@ class Tag(models.Model):
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     email_confirmed = models.BooleanField(default=False)
+    bio = models.TextField(max_length=400, blank=True)
+    location = models.CharField(max_length=40, blank=True)
+    birth_date = models.DateField(null=True, blank=True)
 
     def __str__(self):
         return self.user.username

@@ -1,8 +1,12 @@
 from django.contrib import admin
 from django.db.models import Count
+from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.models import User
 
 from .models import Post, Tag, Profile
-# Register your models here.
+
+
+admin.site.unregister(User)
 
 
 @admin.register(Post)
@@ -28,6 +32,18 @@ class TagAdmin(admin.ModelAdmin):
     number_of_posts.admin_order_field = '_number_of_posts'
 
 
-@admin.register(Profile)
-class ProfileAdmin(admin.ModelAdmin):
-     pass
+class ProfileInline(admin.StackedInline):
+    model = Profile
+    can_delete = False
+    verbose_name_plural = 'Profile'
+    fk_name = 'user'
+
+
+@admin.register(User)
+class CustomUserAdmin(UserAdmin):
+    inlines = (ProfileInline, )
+
+    def get_inline_instances(self, request, obj=None):
+        if not obj:
+            return list()
+        return super(CustomUserAdmin, self).get_inline_instances(request, obj)
