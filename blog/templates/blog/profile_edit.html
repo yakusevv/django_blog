@@ -1,0 +1,39 @@
+{% extends 'blog/base_blog.html' %}
+
+{% block title %}
+  Edit profile - {{ block.super }}
+{% endblock %}
+
+
+{% block content %}
+  <form action="{{ Profile.get_update_url }}" method="post">
+    {% csrf_token %}
+
+    {% for field in form1 %}
+    <div class="form-group">
+      {% if field.errors %}
+        <div class="alert alert-danger">
+          {{field.errors}}
+        </div>
+      {% endif %}
+      {{ field.label }}
+      {{ field }}
+
+    </div>
+    {% endfor %}
+    {% for field in form2 %}
+    <div class="form-group">
+      {% if field.errors %}
+        <div class="alert alert-danger">
+          {{field.errors}}
+        </div>
+      {% endif %}
+      {{ field.label }}
+      {{ field }}
+
+    </div>
+    {% endfor %}
+    <button type="submit" name="Save" class="btn btn-primary">Save profile</button>
+  </form>
+
+{% endblock %}

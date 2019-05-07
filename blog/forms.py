@@ -3,7 +3,7 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
-from .models import Tag, Post
+from .models import Tag, Post, Profile
 
 class TagForm(forms.ModelForm):
 
@@ -68,3 +68,27 @@ class SignUpForm(UserCreationForm):
             'first_name': "Enter your name",
             'last_name': "Enter your last name"
         }
+
+
+class UserForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name', 'email')
+'''
+    widgets = {
+        'first_name': forms.CharField(attrs={'class': 'form-control'}),
+        'last_name': forms.CharField(attrs={'class': 'form-control'}),
+        'email': forms.EmailField(attrs={'class': 'form-control'}),
+        }
+'''
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ('bio', 'location', 'birth_date')
+'''
+        widgets = {
+            'bio': forms.TextInput(attrs={'class': 'form-control'}),
+            'location': forms.CharField(attrs={'class': 'form-control'}),
+            'birth_date': forms.DateField(attrs={'class': 'form-control'}),
+            }
+'''

@@ -14,6 +14,9 @@ urlpatterns = [
         path('tag/<str:slug>/', TagDetail.as_view(), name='tag_detail_url'),
         path('tag/<str:slug>/update/', TagUpdate.as_view(), name='tag_update_url'),
         path('tag/<str:slug>/delete/', TagDelete.as_view(), name='tag_delete_url'),
-        
+        path('profile/<int:pk>/', UserProfileDetail.as_view(), name='user_profile_url'),
+        path('profile/<int:pk>/edit/', UserProfileUpdate.as_view(), name='user_profile_edit_url'),
+
+
 
 ]

@@ -13,9 +13,9 @@ from django.db.models import Q
 from django.contrib.auth.models import User, Group
 from django.contrib.auth import login
 
-from .models import Post, Tag
+from .models import Post, Tag, Profile
 from .utils import *
-from .forms import TagForm, PostForm, SignUpForm
+from .forms import TagForm, PostForm, SignUpForm, UserForm, ProfileForm
 from .tokens import account_activation_token
 
 def posts_list(request):
@@ -167,3 +167,42 @@ class TagDelete(PermissionRequiredMixin, ObjectDeleteMixin, View):
     redirect_url = 'tags_list_url'
     permission_required = 'blog.can_delete'
     raise_exception = True
+
+
+class UserProfileDetail(View):
+    model = User
+    template = 'blog/profile_detail.html'
+
+    def get(self, request, pk):
+        user = get_object_or_404(self.model, pk=pk)
+        return render(request, self.template, context={'user': user})
+
+
+class UserProfileUpdate(View):
+    model1 = User
+    model2 = Profile
+    model_form1 = UserForm
+    model_form2 = ProfileForm
+    template = 'blog/profile_edit.html'
+
+    def get(self, request, pk):
+        obj1 = self.model1.objects.get(pk=pk)
+        obj2 = self.model2.objects.get(user=obj1)
+        bound_form1 = self.model_form1(instance=obj1)
+        bound_form2 = self.model_form2(instance=obj2)
+        return render(request, self.template, context={
+         'form1': bound_form1,
+         'form2': bound_form2,
+         })
+
+    def post(self, request, pk):
+        obj1 = self.model1.objects.get(pk=pk)
+        obj2 = self.model2.objects.get(user=obj1)
+        bound_form1 = self.model_form1(request.POST, instance=obj1)
+        bound_form2 = self.model_form2(request.POST, instance=obj2)
+
+        if bound_form1.is_valid() and bound_form2.is_valid():
+            new_obj1 = bound_form1.save()
+            new_obj2 = bound_form2.save()
+            return redirect(new_obj2.get_absolute_url())
+        return render(request, self.template, context={'form1': bound_form1, 'form2': bound_form2})

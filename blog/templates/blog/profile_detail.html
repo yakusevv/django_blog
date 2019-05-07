@@ -1,0 +1,18 @@
+{% extends 'blog/base_blog.html' %}
+
+
+{% block title %}
+      {{ user.username }} - {{block.super}}
+
+{% endblock %}
+
+
+{% block content %}
+    <p>{{ user.first_name }}</p>
+    <p>{{ user.email }}</p>
+    <p>{{ user.profile.location }}</p>
+    <p>{{ user.profile.birth_date }}</p>
+    <p>{{ user.profile.bio }}</p>
+
+
+{% endblock %}
