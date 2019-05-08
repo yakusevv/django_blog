@@ -63,7 +63,14 @@ class SignUpForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2')
+        fields = [
+            'username',
+            'first_name',
+            'last_name',
+            'email',
+            'password1',
+            'password2'
+            ]
         help_texts = {
             'first_name': "Enter your name",
             'last_name': "Enter your last name"
@@ -71,24 +78,15 @@ class SignUpForm(UserCreationForm):
 
 
 class UserForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(UserForm, self).__init__(*args, **kwargs)
+        self.fields['email'].required = True
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'email')
-'''
-    widgets = {
-        'first_name': forms.CharField(attrs={'class': 'form-control'}),
-        'last_name': forms.CharField(attrs={'class': 'form-control'}),
-        'email': forms.EmailField(attrs={'class': 'form-control'}),
-        }
-'''
+        fields = ['first_name', 'last_name', 'email']
+
+
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ('bio', 'location', 'birth_date')
-'''
-        widgets = {
-            'bio': forms.TextInput(attrs={'class': 'form-control'}),
-            'location': forms.CharField(attrs={'class': 'form-control'}),
-            'birth_date': forms.DateField(attrs={'class': 'form-control'}),
-            }
-'''
+        fields = ['bio', 'location', 'birth_date']

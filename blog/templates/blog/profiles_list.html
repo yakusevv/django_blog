@@ -1,0 +1,13 @@
+{% extends 'blog/base_blog.html' %}
+
+{% block title %}
+Profiles list
+{% endblock %}
+
+{% block content %}
+    <h1 class="mb-5">Profiles:</h1>
+  {% for profile in profiles %}
+    <p><a href="{{ profile.get_absolute_url }}">{{ profile.user.username }}</a></p>
+  {% endfor %}
+
+{% endblock %}

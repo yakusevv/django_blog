@@ -16,6 +16,7 @@ urlpatterns = [
         path('tag/<str:slug>/delete/', TagDelete.as_view(), name='tag_delete_url'),
         path('profile/<int:pk>/', UserProfileDetail.as_view(), name='user_profile_url'),
         path('profile/<int:pk>/edit/', UserProfileUpdate.as_view(), name='user_profile_edit_url'),
+        path('profiles/', profiles_list, name='profiles_list_url')
 
 
 

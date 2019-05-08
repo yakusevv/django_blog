@@ -7,11 +7,12 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
 from django.views.generic import View
 from django.urls import reverse
-from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin, UserPassesTestMixin
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.contrib.auth.models import User, Group
 from django.contrib.auth import login
+from django.http import Http404
 
 from .models import Post, Tag, Profile
 from .utils import *
@@ -169,13 +170,18 @@ class TagDelete(PermissionRequiredMixin, ObjectDeleteMixin, View):
     raise_exception = True
 
 
+def profiles_list(request):
+    profiles = Profile.objects.all()
+    return render(request, 'blog/profiles_list.html', {'profiles': profiles})
+
+
 class UserProfileDetail(View):
     model = User
     template = 'blog/profile_detail.html'
 
     def get(self, request, pk):
-        user = get_object_or_404(self.model, pk=pk)
-        return render(request, self.template, context={'user': user})
+        user_info = get_object_or_404(self.model, pk=pk)
+        return render(request, self.template, context={'user_info': user_info})
 
 
 class UserProfileUpdate(View):
@@ -186,23 +192,29 @@ class UserProfileUpdate(View):
     template = 'blog/profile_edit.html'
 
     def get(self, request, pk):
-        obj1 = self.model1.objects.get(pk=pk)
-        obj2 = self.model2.objects.get(user=obj1)
-        bound_form1 = self.model_form1(instance=obj1)
-        bound_form2 = self.model_form2(instance=obj2)
-        return render(request, self.template, context={
-         'form1': bound_form1,
-         'form2': bound_form2,
-         })
+        if request.user.pk == pk or request.user.is_staff:
+            obj1 = self.model1.objects.get(pk=pk)
+            obj2 = self.model2.objects.get(user=obj1)
+            bound_form1 = self.model_form1(instance=obj1)
+            bound_form2 = self.model_form2(instance=obj2)
+            return render(request, self.template, context={
+                    'form1': bound_form1,
+                    'form2': bound_form2,
+                    })
+        else:
+            raise Http404
 
     def post(self, request, pk):
-        obj1 = self.model1.objects.get(pk=pk)
-        obj2 = self.model2.objects.get(user=obj1)
-        bound_form1 = self.model_form1(request.POST, instance=obj1)
-        bound_form2 = self.model_form2(request.POST, instance=obj2)
+        if request.user.pk == pk or request.user.is_staff:
+            obj1 = self.model1.objects.get(pk=pk)
+            obj2 = self.model2.objects.get(user=obj1)
+            bound_form1 = self.model_form1(request.POST, instance=obj1)
+            bound_form2 = self.model_form2(request.POST, instance=obj2)
 
-        if bound_form1.is_valid() and bound_form2.is_valid():
-            new_obj1 = bound_form1.save()
-            new_obj2 = bound_form2.save()
-            return redirect(new_obj2.get_absolute_url())
-        return render(request, self.template, context={'form1': bound_form1, 'form2': bound_form2})
+            if bound_form1.is_valid() and bound_form2.is_valid():
+                new_obj1 = bound_form1.save()
+                new_obj2 = bound_form2.save()
+                return redirect(new_obj2.get_absolute_url())
+            return render(request, self.template, context={'form1': bound_form1, 'form2': bound_form2})
+        else:
+            raise redirect('login', permanent=True)

@@ -2,17 +2,21 @@
 
 
 {% block title %}
-      {{ user.username }} - {{block.super}}
+      {{ user_info.username }} - {{block.super}}
 
 {% endblock %}
 
 
 {% block content %}
-    <p>{{ user.first_name }}</p>
-    <p>{{ user.email }}</p>
-    <p>{{ user.profile.location }}</p>
-    <p>{{ user.profile.birth_date }}</p>
-    <p>{{ user.profile.bio }}</p>
-
+    <h2 class='mb-4 d-flex justify-content-center'>{{ user_info.username }}</h2>
+    <p><b>First name: </b> {{ user_info.first_name }}</p>
+    <p><b>Last name: </b> {{ user_info.last_name }}</p>
+    <p><b>Email: </b>{{ user_info.email }}</p>
+    <p><b>Location: </b>{{ user_info.profile.location }}</p>
+    <p><b>Date of birth: </b>{{ user_info.profile.birth_date }}</p>
+    <p><b>Bio: </b>{{ user_info.profile.bio }}</p>
+  {% if user.pk == user_info.pk or user.is_staff %}
+    <a href="{{ user_info.profile.get_update_url }}" class="btn btn-primary">Edit</a>
+  {% endif %}
 
 {% endblock %}
