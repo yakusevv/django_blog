@@ -13,7 +13,9 @@
     <p><b>Last name: </b> {{ user_info.last_name }}</p>
     <p><b>Email: </b>{{ user_info.email }}</p>
     <p><b>Location: </b>{{ user_info.profile.location }}</p>
-    <p><b>Date of birth: </b>{{ user_info.profile.birth_date }}</p>
+    <p><b>Date of birth: </b>{% if not user_info.profile.birth_date is None %}
+                                {{ user_info.profile.birth_date }}
+                              {% endif %}</p>
     <p><b>Bio: </b>{{ user_info.profile.bio }}</p>
   {% if user.pk == user_info.pk or user.is_staff %}
     <a href="{{ user_info.profile.get_update_url }}" class="btn btn-primary">Edit</a>

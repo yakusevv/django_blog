@@ -1,9 +1,11 @@
+import datetime
 from django import forms
 from django.core.exceptions import ValidationError
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
 from .models import Tag, Post, Profile
+
 
 class TagForm(forms.ModelForm):
 
@@ -84,9 +86,27 @@ class UserForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'email']
-
+        widgets = {
+                'first_name' : forms.TextInput(attrs={'class': 'form-control'}),
+                'last_name' : forms.TextInput(attrs={'class': 'form-control'}),
+                'email' : forms.EmailInput(attrs={'class': 'form-control'}),
+        }
 
 class ProfileForm(forms.ModelForm):
+    def clean_birth_date(self):
+        birth_date = self.cleaned_data['birth_date']
+        if birth_date > datetime.date.today():
+            raise ValidationError('Date of birth can not be in future')
+        return birth_date
+
     class Meta:
         model = Profile
         fields = ['bio', 'location', 'birth_date']
+        widgets = {
+                'bio' : forms.Textarea(attrs={'class': 'form-control'}),
+                'location' : forms.TextInput(attrs={'class': 'form-control'}),
+                'birth_date' : forms.DateInput(attrs={
+                                                'class': 'form-control',
+                                                'placeholder': 'yyyy-mm-dd'
+                                                }),
+        }
