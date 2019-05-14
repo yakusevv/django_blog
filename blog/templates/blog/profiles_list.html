@@ -7,7 +7,9 @@ Profiles list
 {% block content %}
     <h1 class="mb-5">Profiles:</h1>
   {% for profile in profiles %}
-    <p><a href="{{ profile.get_absolute_url }}">{{ profile.user.username }}</a></p>
+  {% if profile.email_confirmed or user.is_staff %}
+    <p><a {% if not profile.email_confirmed %} class="unconfirmed" {% endif %}href="{{ profile.get_absolute_url }}">{{ profile.user.username }}</a></p>
+  {% endif %}
   {% endfor %}
 
 {% endblock %}

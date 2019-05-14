@@ -95,7 +95,7 @@ class UserForm(forms.ModelForm):
 class ProfileForm(forms.ModelForm):
     def clean_birth_date(self):
         birth_date = self.cleaned_data['birth_date']
-        if birth_date > datetime.date.today():
+        if birth_date and birth_date > datetime.date.today():
             raise ValidationError('Date of birth can not be in future')
         return birth_date
 
