@@ -125,6 +125,10 @@ STATICFILES_DIRS = [
         os.path.join(BASE_DIR, 'static')
 ]
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'static/media')
+
+
 LOGIN_REDIRECT_URL = 'redirect_blog_url'
 LOGOUT_REDIRECT_URL = 'redirect_blog_url'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
