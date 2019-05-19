@@ -6,7 +6,7 @@
 
 
 {% block content %}
-  <form action="{{ Profile.get_update_url }}" method="post">
+  <form action="{{ Profile.get_update_url }}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
 
     {% for field in form1 %}

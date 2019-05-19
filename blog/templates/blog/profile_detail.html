@@ -9,7 +9,7 @@
 
 {% block content %}
     <h2 class='mb-4 d-flex justify-content-center'>{{ user_info.username }}</h2>
-    <img src="{{ user_info.profile.avatar.url }}" alt="">
+      <img class="img-fluid w-50" vspace="10" src="{{ user_info.profile.avatar.url }}" alt="Profile picture">
     <p><b>First name: </b> {{ user_info.first_name }}</p>
     <p><b>Last name: </b> {{ user_info.last_name }}</p>
     <p><b>Email: </b>{{ user_info.email }}</p>

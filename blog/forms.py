@@ -101,10 +101,17 @@ class ProfileForm(forms.ModelForm):
 
     class Meta:
         model = Profile
-        fields = ['bio', 'location', 'birth_date']
+        fields = ['avatar', 'bio', 'location', 'birth_date']
         widgets = {
-                'bio' : forms.Textarea(attrs={'class': 'form-control'}),
-                'location' : forms.TextInput(attrs={'class': 'form-control'}),
+                'avatar'     : forms.FileInput(attrs={
+                                                'class': "form-control-file",
+                                                }),
+                'bio'        : forms.Textarea(attrs={
+                                                'class': 'form-control'
+                                                }),
+                'location'   : forms.TextInput(attrs={
+                                                'class': 'form-control'
+                                                }),
                 'birth_date' : forms.DateInput(attrs={
                                                 'class': 'form-control',
                                                 'placeholder': 'yyyy-mm-dd'
