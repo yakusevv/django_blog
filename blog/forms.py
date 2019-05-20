@@ -23,20 +23,7 @@ class TagForm(forms.ModelForm):
 
         if new_slug == 'create':
             raise ValidationError('Slug may not be "Create"')
-#        if Tag.objects.filter(slug__iexact=new_slug).count():
-#            raise ValidationError(
-#                'Slug must be unique. We have "{}" slug already'.format(new_slug)
-#                )
         return new_slug
-
-#    def clean_title(self):
-#        new_title = self.cleaned_data['title']
-#
-#        if Tag.objects.filter(title__iexact=new_title).count():
-#            raise ValidationError(
-#                'Tag must be unique. We have "{}" tag already'.format(new_title)
-#                )
-#        return new_title
 
 
 class PostForm(forms.ModelForm):
@@ -87,17 +74,12 @@ class UserForm(forms.ModelForm):
         model = User
         fields = ['first_name', 'last_name', 'email']
         widgets = {
-                'first_name' : forms.TextInput(attrs={'class': 'form-control'}),
+                'first_name': forms.TextInput(attrs={'class': 'form-control'}),
                 'last_name' : forms.TextInput(attrs={'class': 'form-control'}),
-                'email' : forms.EmailInput(attrs={'class': 'form-control'}),
+                'email'     : forms.EmailInput(attrs={'class': 'form-control'}),
         }
 
 class ProfileForm(forms.ModelForm):
-    def clean_birth_date(self):
-        birth_date = self.cleaned_data['birth_date']
-        if birth_date and birth_date > datetime.date.today():
-            raise ValidationError('Date of birth can not be in future')
-        return birth_date
 
     class Meta:
         model = Profile
@@ -117,3 +99,31 @@ class ProfileForm(forms.ModelForm):
                                                 'placeholder': 'yyyy-mm-dd'
                                                 }),
         }
+
+    def clean_birth_date(self):
+        birth_date = self.cleaned_data['birth_date']
+        if birth_date and birth_date > datetime.date.today():
+            raise ValidationError('Date of birth can not be in future')
+        return birth_date
+
+    def clean_avatar(self):
+        avatar = self.cleaned_data['avatar']
+
+        try:
+            main, sub = avatar.content_type.split('/')
+            if not (main == 'image' and sub in ['jpeg', 'pjpeg', 'gif', 'png']):
+                raise forms.ValidationError(u'Please use a JPEG, '
+                    'GIF or PNG image.')
+
+            if len(avatar) > (2000 * 1024):
+                raise forms.ValidationError(
+                    u'Avatar file size may not exceed 1 mb')
+
+        except AttributeError:
+            """
+            Handles case when we are updating the user profile
+            and do not supply a new avatar
+            """
+            pass
+
+        return avatar
