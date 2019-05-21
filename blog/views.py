@@ -197,9 +197,11 @@ class UserProfileUpdate(View):
             obj2 = self.model2.objects.get(user=obj1)
             bound_form1 = self.model_form1(instance=obj1)
             bound_form2 = self.model_form2(instance=obj2)
+            show_avatar = obj2.avatar.url
             return render(request, self.template, context={
-                    'form1': bound_form1,
-                    'form2': bound_form2,
+                    'form1' : bound_form1,
+                    'form2' : bound_form2,
+                    'avatar': show_avatar
                     })
         else:
             raise Http404
@@ -210,10 +212,25 @@ class UserProfileUpdate(View):
             obj2 = self.model2.objects.get(user=obj1)
             bound_form1 = self.model_form1(request.POST, instance=obj1)
             bound_form2 = self.model_form2(request.POST, request.FILES, instance=obj2)
-            if bound_form1.is_valid() and bound_form2.is_valid():
-                new_obj1 = bound_form1.save()
-                new_obj2 = bound_form2.save()
-                return redirect(new_obj2.get_absolute_url())
-            return render(request, self.template, context={'form1': bound_form1, 'form2': bound_form2})
+            show_avatar = obj2.avatar.url
+            if 'delete_avatar' in request.POST:
+                    obj2.avatar = Profile.avatar.field.default
+                    obj2.save()
+                    default_avatar = obj2.avatar.url
+                    return render(request, self.template, context={
+                                            'form1' : bound_form1,
+                                            'form2' : bound_form2,
+                                            'avatar': default_avatar
+                                            })
+            elif 'save' in request.POST:
+                if bound_form1.is_valid() and bound_form2.is_valid():
+                    new_obj1 = bound_form1.save()
+                    new_obj2 = bound_form2.save()
+                    return redirect(new_obj2.get_absolute_url())
+                return render(request, self.template, context={
+                                        'form1' : bound_form1,
+                                        'form2' : bound_form2,
+                                        'avatar': show_avatar
+                                        })
         else:
             raise redirect('login', permanent=True)

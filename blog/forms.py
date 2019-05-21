@@ -80,6 +80,9 @@ class UserForm(forms.ModelForm):
         }
 
 class ProfileForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(ProfileForm, self).__init__(*args, **kwargs)
+        self.fields['avatar'].required = False
 
     class Meta:
         model = Profile
@@ -99,6 +102,9 @@ class ProfileForm(forms.ModelForm):
                                                 'placeholder': 'yyyy-mm-dd'
                                                 }),
         }
+        labels = {
+                'avatar' : 'Change avatar'
+        }     
 
     def clean_birth_date(self):
         birth_date = self.cleaned_data['birth_date']
